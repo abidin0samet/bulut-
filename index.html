@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Bulut Üssü</title>
+  <style>
+    body{font-family:Arial,Helvetica,sans-serif;max-width:900px;margin:40px auto;padding:0 16px}
+    header h1{margin:0}
+    .card{border:1px solid #eee;padding:18px;border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,0.03)}
+    button{padding:10px 14px;font-size:16px;border-radius:6px;cursor:pointer}
+    #result{margin-top:12px;white-space:pre-wrap}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Bulut Üssü</h1>
+    <p>Basit açılış sayfası — CTF için hazırlanmıştır.</p>
+  </header>
+
+  <section class="card">
+    <p>Bu sayfada “Verileri Getir” butonuna basıldığında veriler gösterilecek (API entegrasyonu sonraki adımda yapılacak).</p>
+    <button id="get-data-btn">Verileri Getir</button>
+    <div id="result" aria-live="polite"></div>
+  </section>
+
+  <script>
+    document.getElementById('get-data-btn').addEventListener('click', function(){
+      const r = document.getElementById('result');
+      r.textContent = 'Henüz API bağlı değil — bu buton ileride veriyi çekecek. (Görev 4 ile entegre edilecek)';
+      r.style.border = '1px solid #ddd';
+      r.style.padding = '10px';
+    });
+  </script>
+</body>
+</html>
