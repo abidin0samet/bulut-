@@ -9,7 +9,7 @@
     header h1{margin:0}
     .card{border:1px solid #eee;padding:18px;border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,0.03)}
     button{padding:10px 14px;font-size:16px;border-radius:6px;cursor:pointer}
-    #result{margin-top:12px;white-space:pre-wrap}
+    #result{margin-top:12px;white-space:pre-wrap; border: 1px solid transparent; padding: 10px; border-radius: 6px; min-height: 80px;}
   </style>
 </head>
 <body>
@@ -19,17 +19,58 @@
   </header>
 
   <section class="card">
-    <p>Bu sayfada “Verileri Getir” butonuna basıldığında veriler gösterilecek (API entegrasyonu sonraki adımda yapılacak).</p>
+    <p>Bu sayfada “Verileri Getir” butonuna basıldığında API’den veriler çekilecek ve gösterilecek.</p>
     <button id="get-data-btn">Verileri Getir</button>
     <div id="result" aria-live="polite"></div>
   </section>
 
   <script>
-    document.getElementById('get-data-btn').addEventListener('click', function(){
+    const API_URL = "https://young-sound-1572.abidinsamet0cay.workers.dev/"; // Buraya Worker API adresini yaz
+    const API_KEY = "kayseri-ankara"; // Buraya Worker’da tanımlı API anahtarını yaz
+
+    document.getElementById('get-data-btn').addEventListener('click', async () => {
       const r = document.getElementById('result');
-      r.textContent = 'Henüz API bağlı değil — bu buton ileride veriyi çekecek. (Görev 4 ile entegre edilecek)';
       r.style.border = '1px solid #ddd';
       r.style.padding = '10px';
+      r.textContent = 'Veriler çekiliyor... Lütfen bekleyin.';
+
+      try {
+        const response = await fetch(`${API_URL}?key=${API_KEY}`);
+        if (!response.ok) {
+          const errorData = await response.json();
+          r.textContent = 'Hata: ' + (errorData.error || 'Bilinmeyen hata');
+          return;
+        }
+
+        const data = await response.json();
+        if (data.length === 0) {
+          r.textContent = 'Veri bulunamadı.';
+          return;
+        }
+
+        // Veriyi basit tablo olarak göster
+        let html = '<table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse; width:100%">';
+        // Tablo başlıkları
+        html += '<thead><tr>';
+        Object.keys(data[0]).forEach(header => {
+          html += `<th>${header}</th>`;
+        });
+        html += '</tr></thead><tbody>';
+
+        // Satırlar
+        data.forEach(row => {
+          html += '<tr>';
+          Object.values(row).forEach(cell => {
+            html += `<td>${cell}</td>`;
+          });
+          html += '</tr>';
+        });
+        html += '</tbody></table>';
+
+        r.innerHTML = html;
+      } catch (error) {
+        r.textContent = 'İstek sırasında hata oluştu: ' + error.message;
+      }
     });
   </script>
 </body>
